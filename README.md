@@ -1,39 +1,35 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+#
 
-    <title>GrowBridge</title>
-</head>
+#
 
-<body>
+# GrowBridge
 
-    <h1>Welcome to GrowBridge</h1>
+## Small Business Management System
 
-    <p>Growing small businesses through technology.</p>
+GrowBridge is a web-based system designed to help small businesses and retail shops manage their daily operations.
 
-</body>
-</html>
-# Growbridge
+### Main Features
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+1. Product and Inventory Management
+2. Sales Management
+3. Customer Management
+4. Business Reports
 
-    <title>GrowBridge</title>
-</head>
+### Technologies
 
-<body>
+- HTML
+- CSS
+- JavaScript
 
-    <h1>Welcome to GrowBridge</h1>
+### Project Goal
 
-    <p>Growing small businesses through technology.</p>
+To simplify business management through accessible technology and help small businesses grow.
 
-</body>
-</html>
+### Developer
+
+JCLEEZY
+
+### Project Status
+
+Under Development.

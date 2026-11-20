@@ -28,7 +28,7 @@ To simplify business management through accessible technology and help small bus
 
 ### Developer
 
-JCLEEZY
+MUFASA
 
 ### Project Status
 

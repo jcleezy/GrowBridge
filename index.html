@@ -1,26 +1,240 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrowBridge</title>
+    <title>GrowBridge | Business Management</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>GrowBridge</h1>
-    <h2>Small Business Management System</h2>
 
-    <h3>Dashboard</h3>
+    <!-- APP HEADER -->
+    <header class="app-header">
+        <h1>GrowBridge</h1>
+        <p>Business Management System</p>
+    </header>
 
-    <p>Total Products: 0</p>
-    <p>Total Sales: TSh 0</p>
-    <p>Total Customers: 0</p>
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="sidebar">
+        <h2>MENU</h2>
+        <a href="#dashboard" class="nav-link">Dashboard</a>
+        <a href="#inventory" class="nav-link">Inventory</a>
+        <a href="#sales" class="nav-link">Sales Management</a>
+        <a href="#customers" class="nav-link">Customers</a>
+        <a href="#reports" class="nav-link">Business Reports</a>
+    </nav>
 
-    <h3>Management Modules</h3>
-    <ul>
-        <li>Products and Inventory</li>
-        <li>Sales Management</li>
-        <li>Customer Management</li>
-        <li>Business Reports</li>
-    </ul>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+    <main>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard">
+            <h2>Business Dashboard</h2>
+            <p>Welcome to your business management system.</p>
+
+            <div class="dashboard-cards">
+
+                <div class="dashboard-card">
+                    <h3>Total Products</h3>
+                    <p id="total-products">0</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Stock Value</h3>
+                    <p id="dashboard-stock-value">TSh 0</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Low Stock</h3>
+                    <p id="low-stock-count">0</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Total Units</h3>
+                    <p id="total-units">0</p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Total Customers</h3>
+                    <p id="total-customers">0</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- INVENTORY -->
+        <section id="inventory">
+            <h2>Product Inventory</h2>
+
+            <h3>Add New Product</h3>
+
+            <form id="product-form">
+
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name"
+                    placeholder="Enter product name" required>
+
+                <label for="product-price">Price (TSh)</label>
+                <input type="number" id="product-price"
+                    placeholder="Enter price" min="1" required>
+
+                <label for="product-quantity">Quantity</label>
+                <input type="number" id="product-quantity"
+                    placeholder="Enter quantity" min="1" required>
+
+                <button type="submit">Add Product</button>
+
+            </form>
+
+            <h3>Inventory List</h3>
+<input
+    type="text"
+    id="product-search"
+    placeholder="Search products by name..."
+>
+            <p id="total-value">Total Stock Value: TSh 0</p>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price (TSh)</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="product-list"></tbody>
+            </table>
+        </section>
+
+        <!-- SALES MANAGEMENT -->
+        <section id="sales">
+            <h2>Sales Management</h2>
+
+            <form id="sales-form">
+
+                <label for="sale-product">Select Product</label>
+                <select id="sale-product" required>
+                    <option value="">Choose a product</option>
+                </select>
+
+                <label for="sale-quantity">Quantity</label>
+                <input type="number" id="sale-quantity"
+                    placeholder="Enter quantity" min="1" required>
+
+                <button type="submit">Record Sale</button>
+
+            </form>
+
+            <h3 id="sale-message"></h3>
+            <h3 id="total-sales">Total Sales: TSh 0</h3>
+
+            <h3>Sales History</h3>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody id="sales-history"></tbody>
+            </table>
+        </section>
+
+        <!-- BUSINESS REPORTS -->
+        <section id="reports" class="reports-section">
+            <h2>Business Reports</h2>
+
+            <div class="report-card">
+                <h3>Total Revenue</h3>
+                <p id="report-revenue">TSh 0</p>
+            </div>
+
+            <div class="report-card">
+                <h3>Transactions</h3>
+                <p id="report-transactions">0</p>
+            </div>
+
+            <div class="report-card">
+                <h3>Products Sold</h3>
+                <p id="report-products-sold">0</p>
+            </div>
+
+            <h3>Recent Sales</h3>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recent-sales"></tbody>
+            </table>
+        </section>
+
+        <!-- CUSTOMER MANAGEMENT -->
+        <section id="customers">
+            <h2>Customer Management</h2>
+
+            <input type="text" id="customer-search"
+                placeholder="Search customer by name or phone">
+
+            <h3>Register New Customer</h3>
+
+            <form id="customer-form">
+
+                <label for="customer-name">Customer Name</label>
+                <input type="text" id="customer-name"
+                    placeholder="Enter customer name" required>
+
+                <label for="customer-phone">Phone Number</label>
+                <input type="tel" id="customer-phone"
+                    placeholder="Enter phone number" required>
+
+                <button type="submit">Register Customer</button>
+
+            </form>
+
+            <h3>Registered Customers</h3>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="customer-list"></tbody>
+            </table>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>GrowBridge © 2026</p>
+            <p>Growing small businesses through technology.</p>
+        </footer>
+
+    </main>
+    </div>
+<button id="back-to-top">↑ Back to Top</button>
+    <script src="script.js"></script>
+
 </body>
 </html>

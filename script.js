@@ -465,7 +465,8 @@ if (!Number.isFinite(price) || !Number.isFinite(quantity) || price <= 0 || quant
         quantity: quantity
     });
 
-    displaySalesHistory();displayProducts();
+    displaySalesHistory();displaySalesHistory();
+displayBusinessReports();displayProducts();
 
     productForm.reset();
 
@@ -475,7 +476,7 @@ displayProducts();
 displayProducts();
 displaySalesHistory();
 displayBusinessReports();
-
+updateSalesPerformanceChart();
 
 // DISPLAY TOTAL SALES
 totalSalesDisplay.textContent =
@@ -743,3 +744,122 @@ function printCustomerReceipt() {
         printWindow.print();
     };
 }
+// GROWBRIDGE SALES PERFORMANCE CHART
+
+let salesPerformanceChart = null;
+
+function updateSalesPerformanceChart() {
+
+    const canvas = document.getElementById("sales-performance-chart");
+
+    if (!canvas) return;
+
+    if (document.body.classList.contains("page-dashboard") === false) {
+        return;
+    }
+
+    const emptyMessage = document.getElementById("sales-chart-empty");
+
+    if (typeof Chart === "undefined") {
+        if (emptyMessage) {
+            emptyMessage.textContent = "Chart unavailable. Check your internet connection.";
+            emptyMessage.style.display = "block";
+        }
+        return;
+    }
+
+    const dailyRevenue = {};
+
+    salesHistory.forEach(function(sale) {
+
+        const date = new Date(sale.date);
+
+        if (isNaN(date.getTime())) return;
+
+        const dateKey = date.toLocaleDateString("en-CA");
+
+        dailyRevenue[dateKey] =
+            (dailyRevenue[dateKey] || 0) + Number(sale.total || 0);
+    });
+
+    const dates = Object.keys(dailyRevenue).sort();
+
+    if (emptyMessage) {
+        emptyMessage.style.display = dates.length ? "none" : "block";
+        emptyMessage.textContent = "No sales recorded yet. Your sales performance will appear here.";
+    }
+
+    if (salesPerformanceChart) {
+        salesPerformanceChart.destroy();
+    }
+
+    if (dates.length === 0) return;
+
+    const labels = dates.map(function(date) {
+        return new Date(date + "T12:00:00").toLocaleDateString("en-TZ", {
+            day: "2-digit",
+            month: "short"
+        });
+    });
+
+    const values = dates.map(function(date) {
+        return dailyRevenue[date];
+    });
+
+    salesPerformanceChart = new Chart(canvas, {
+
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Daily Revenue",
+                data: values,
+                borderColor: "#16a34a",
+                backgroundColor: "rgba(22, 163, 74, 0.12)",
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return "Revenue: TSh " +
+                                Number(context.raw).toLocaleString("en-TZ");
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        callback: function(value) {
+                            return "TSh " +
+                                Number(value).toLocaleString("en-TZ");
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// INITIALIZE DASHBOARD CHART
+updateSalesPerformanceChart();

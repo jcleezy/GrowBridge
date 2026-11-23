@@ -683,3 +683,68 @@ productSearch.addEventListener("input", function() {
     displayProducts();
 
 });
+// PRINT CUSTOMER RECEIPT ONLY
+
+function printCustomerReceipt() {
+
+    const receipt = document.getElementById("sales-receipt");
+
+    if (!receipt || !receipt.innerText.trim()) {
+        alert("Please record a sale before printing a receipt.");
+        return;
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+        alert("Please allow pop-ups to print the receipt.");
+        return;
+    }
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>GrowBridge Sales Receipt</title>
+
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background: white;
+                    color: black;
+                    width: 280px;
+                    margin: 20px auto;
+                    padding: 15px;
+                }
+
+                h2, h3, p {
+                    color: black;
+                    text-align: center;
+                }
+
+                hr {
+                    border: 1px dashed black;
+                }
+
+                @media print {
+                    @page {
+                        size: 80mm auto;
+                        margin: 5mm;
+                    }
+                }
+            </style>
+        </head>
+
+        <body>
+            ${receipt.innerHTML}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+    };
+}

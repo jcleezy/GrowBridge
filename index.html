@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowBridge | Business Management</title>
-<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">    
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=2">
 </head>
 
@@ -162,6 +162,26 @@
             </form>
 
             <h3 id="sale-message"></h3>
+<!-- SALES RECEIPT -->
+<div id="receipt-container" style="display: none;">
+    <div id="sales-receipt">
+        <h2>GROWBRIDGE</h2>
+        <p>SALES RECEIPT</p>
+        <hr>
+        <p>Receipt No: <strong id="receipt-number"></strong></p>
+        <p>Date: <strong id="receipt-date"></strong></p>
+        <hr>
+        <p>Product: <strong id="receipt-product"></strong></p>
+        <p>Quantity: <strong id="receipt-quantity"></strong></p>
+        <p>Unit Price: <strong id="receipt-price"></strong></p>
+        <hr>
+        <h3>Total: <span id="receipt-total"></span></h3>
+        <p>Thank you for shopping with us!</p>
+    </div>
+    <button type="button" onclick="window.print()">
+        Print / Save Receipt as PDF
+    </button>
+</div>
             <h3 id="total-sales">Total Sales: TSh 0</h3>
 
             <h3>Sales History</h3>

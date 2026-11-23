@@ -1,4 +1,4 @@
-// GROWBRIDGE PRODUCT INVENTORY
+	// GROWBRIDGE PRODUCT INVENTORY
 let products = JSON.parse(localStorage.getItem("growbridgeProducts")) || [
     { name: "Rice", price: 2500, quantity: 10 },
     { name: "Sugar", price: 3000, quantity: 15 },
@@ -516,19 +516,20 @@ salesForm.addEventListener("submit", function(event) {
 // SAVE SALE RECORD
 
 let saleRecord = {
+    receiptNumber: "GB-" + Date.now(),
     productName: product.name,
     quantity: quantitySold,
     unitPrice: product.price,
     total: saleAmount,
     date: new Date().toISOString()
 };
-
 salesHistory.push(saleRecord);
 
 localStorage.setItem(
     "growbridgeSalesHistory",
     JSON.stringify(salesHistory)
 );
+
     localStorage.setItem(
         "growbridgeTotalSales",
         totalSales
@@ -540,14 +541,31 @@ displayBusinessReports();
     totalSalesDisplay.textContent =
         "Total Sales: TSh " + totalSales.toLocaleString("en-TZ");
 
-    saleMessage.textContent =
+        saleMessage.textContent =
         "Sale recorded successfully!";
+// DISPLAY SALES RECEIPT
+document.getElementById("receipt-container").style.display = "block";
 
+document.getElementById("receipt-number").textContent =
+    saleRecord.receiptNumber;
+
+document.getElementById("receipt-date").textContent =
+    new Date(saleRecord.date).toLocaleString();
+
+document.getElementById("receipt-product").textContent =
+    saleRecord.productName;
+
+document.getElementById("receipt-quantity").textContent =
+    saleRecord.quantity;
+
+document.getElementById("receipt-price").textContent =
+    "TSh " + saleRecord.unitPrice.toLocaleString("en-TZ");
+
+document.getElementById("receipt-total").textContent =
+    "TSh " + saleRecord.total.toLocaleString("en-TZ");
     salesForm.reset();
 
 });
-
-
 // Delete a product
 function deleteProduct(index) {
 

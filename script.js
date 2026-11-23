@@ -668,21 +668,16 @@ backToTop.addEventListener("click", function() {
 });
 // GROWBRIDGE PRODUCT SEARCH
 
-
-productSearch.addEventListener("input", function() {
-    displayProducts();
-});
 let productSearch = document.getElementById("product-search");
 
 console.log("GrowBridge search initialized:", productSearch);
 
-productSearch.addEventListener("input", function() {
-
-    console.log("Search input:", productSearch.value);
-
-    displayProducts();
-
-});
+if (productSearch) {
+    productSearch.addEventListener("input", function() {
+        console.log("Search input:", productSearch.value);
+        displayProducts();
+    });
+}
 // PRINT CUSTOMER RECEIPT ONLY
 
 function printCustomerReceipt() {

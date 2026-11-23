@@ -4,9 +4,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowBridge | Business Management</title>
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">    
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body>
@@ -17,16 +18,41 @@
         <p>Business Management System</p>
     </header>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <nav class="sidebar">
-        <h2>MENU</h2>
-        <a href="#dashboard" class="nav-link">Dashboard</a>
-        <a href="#inventory" class="nav-link">Inventory</a>
-        <a href="#sales" class="nav-link">Sales Management</a>
-        <a href="#customers" class="nav-link">Customers</a>
-        <a href="#reports" class="nav-link">Business Reports</a>
-    </nav>
+<nav class="sidebar">
 
+    <div class="sidebar-brand">
+        <h2>GrowBridge</h2>
+        <p>BUSINESS CONTROL</p>
+    </div>
+
+    <div class="sidebar-menu">
+
+        <p class="menu-label">MAIN MENU</p>
+
+        <a href="#dashboard" class="nav-link active">
+            <span>▦</span> Dashboard
+        </a>
+
+        <a href="#inventory" class="nav-link">
+            <span>▣</span> Inventory
+        </a>
+
+        <a href="#sales" class="nav-link">
+            <span>↗</span> Sales
+        </a>
+
+        <a href="#reports" class="nav-link">
+            <span>▤</span> Reports
+        </a>
+
+    </div>
+
+    <div class="sidebar-footer">
+        <p>GrowBridge v1.0</p>
+        <small>Smart Business Management</small>
+    </div>
+
+</nav>
     <!-- MAIN CONTENT -->
     <div class="main-content">
     <main>
@@ -71,34 +97,36 @@
             <h2>Product Inventory</h2>
 
             <h3>Add New Product</h3>
+<form id="product-form">
 
-            <form id="product-form">
+    <label for="product-name">Product Name</label>
+    <input type="text" id="product-name"
+        placeholder="Enter product name" required>
 
-                <label for="product-name">Product Name</label>
-                <input type="text" id="product-name"
-                    placeholder="Enter product name" required>
+    <label for="product-price">Price (TSh)</label>
+    <input type="number" id="product-price"
+        placeholder="Enter price" min="1" required>
 
-                <label for="product-price">Price (TSh)</label>
-                <input type="number" id="product-price"
-                    placeholder="Enter price" min="1" required>
+    <label for="product-quantity">Quantity</label>
+    <input type="number" id="product-quantity"
+        placeholder="Enter quantity" min="1" required>
 
-                <label for="product-quantity">Quantity</label>
-                <input type="number" id="product-quantity"
-                    placeholder="Enter quantity" min="1" required>
+    <button type="submit">Add Product</button>
 
-                <button type="submit">Add Product</button>
+</form>
 
-            </form>
-
-            <h3>Inventory List</h3>
+<h3>Inventory List</h3>
 <input
     type="text"
     id="product-search"
     placeholder="Search products by name..."
+    oninput="displayProducts()"
 >
+
             <p id="total-value">Total Stock Value: TSh 0</p>
 
-            <table border="1">
+            <div class="table-responsive">
+<table border="1">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -111,6 +139,7 @@
 
                 <tbody id="product-list"></tbody>
             </table>
+</div>
         </section>
 
         <!-- SALES MANAGEMENT -->
@@ -137,7 +166,8 @@
 
             <h3>Sales History</h3>
 
-            <table border="1">
+            <div class="table-responsive">
+<table border="1">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -150,6 +180,7 @@
 
                 <tbody id="sales-history"></tbody>
             </table>
+</div>
         </section>
 
         <!-- BUSINESS REPORTS -->
@@ -173,7 +204,8 @@
 
             <h3>Recent Sales</h3>
 
-            <table border="1">
+            <div class="table-responsive">
+<table border="1">
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -185,6 +217,7 @@
 
                 <tbody id="recent-sales"></tbody>
             </table>
+</div>
         </section>
 
         <!-- CUSTOMER MANAGEMENT -->
@@ -212,7 +245,8 @@
 
             <h3>Registered Customers</h3>
 
-            <table border="1">
+            <div class="table-responsive">
+<table border="1">
                 <thead>
                     <tr>
                         <th>Customer Name</th>
@@ -223,6 +257,7 @@
 
                 <tbody id="customer-list"></tbody>
             </table>
+</div>
         </section>
 
         <!-- FOOTER -->

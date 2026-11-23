@@ -650,8 +650,18 @@ backToTop.addEventListener("click", function() {
 });
 // GROWBRIDGE PRODUCT SEARCH
 
-let productSearch = document.getElementById("product-search");
 
 productSearch.addEventListener("input", function() {
     displayProducts();
+});
+let productSearch = document.getElementById("product-search");
+
+console.log("GrowBridge search initialized:", productSearch);
+
+productSearch.addEventListener("input", function() {
+
+    console.log("Search input:", productSearch.value);
+
+    displayProducts();
+
 });

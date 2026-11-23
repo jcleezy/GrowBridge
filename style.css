@@ -61,22 +61,6 @@ section h3 {
 
 /* DASHBOARD CARDS */
 
-section div {
-    background-color: #edf3fa;
-    padding: 18px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-}
-
-section div h4 {
-    margin-bottom: 10px;
-}
-
-section div p {
-    font-size: 24px;
-    font-weight: bold;
-    color: #16734b;
-}
 
 /* MANAGEMENT LIST */
 
@@ -189,32 +173,6 @@ footer {
 }
 
 
-/* PROFESSIONAL APP LAYOUT */
-
-body {
-    display: block;
-    margin: 0;
-    padding: 15px;
-    width: 100%;
-}
-
-.app-header {
-    width: 100%;
-}
-
-.sidebar {
-    width: 100%;
-    position: static;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.main-content {
-    width: 100%;
-    margin: 0;
-    min-width: 0;
-}
-
 /* DASHBOARD CARDS */
 
 .dashboard-cards {
@@ -243,12 +201,6 @@ body {
         font-size: 24px;
     }
 
-    table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
 }
 
 
@@ -284,38 +236,6 @@ body {
         grid-template-columns: 1fr;
     }
 
-    table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-}
-/* GROWBRIDGE LAYOUT FIX */
-.sidebar {
-    position: static !important;
-    width: 100% !important;
-    height: auto !important;
-    box-sizing: border-box;
-}
-
-.main-content {
-    margin-left: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box;
-}
-
-.main-content section {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-body {
-    display: block !important;
-    width: 100%;
-    box-sizing: border-box;
 }
 /* FIX PRODUCT AND CUSTOMER FORMS */
 
@@ -425,4 +345,474 @@ button.delete-btn:hover {
 
 #back-to-top:hover {
     background-color: #15803d;
+}
+/* GROWBRIDGE DARK SIDEBAR */
+
+.sidebar {
+    background: #0f172a;
+    color: #ffffff;
+    width: 250px;
+    min-height: 100vh;
+    padding: 25px 18px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.sidebar-brand {
+    margin-bottom: 45px;
+}
+
+.sidebar-brand h2 {
+    color: #10b981;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.sidebar-brand p {
+    color: #94a3b8;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.menu-label {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.sidebar-menu .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.sidebar-menu .nav-link span {
+    font-size: 18px;
+}
+
+.sidebar-menu .nav-link:hover,
+.sidebar-menu .nav-link.active {
+    background: #064e3b;
+    color: #34d399;
+    transform: translateX(4px);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid #334155;
+    padding-top: 18px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+/* MAIN APPLICATION LAYOUT */
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #0b1120;
+    color: #e2e8f0;
+}
+
+.app-header {
+    display: none;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    flex-shrink: 0;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+    background: #0b1120;
+}
+
+main {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+}
+/* MOBILE RESPONSIVE APP LAYOUT */
+
+@media (max-width: 768px) {
+
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 15px;
+    }
+
+    .sidebar-brand {
+        margin-bottom: 15px;
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .menu-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .sidebar-menu .nav-link {
+        flex: 1 1 40%;
+        margin-bottom: 0;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .sidebar-footer {
+        display: none;
+    }
+
+    .main-content {
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+/* GROWBRIDGE DASHBOARD */
+
+#dashboard {
+    margin-bottom: 35px;
+}
+
+#dashboard h2 {
+    color: #f8fafc;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+#dashboard > p {
+    color: #94a3b8;
+    margin-bottom: 28px;
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.dashboard-card {
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    border-color: #10b981;
+}
+
+.dashboard-card h3 {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.dashboard-card p {
+    color: #34d399;
+    font-size: 27px;
+    font-weight: 800;
+    margin: 0;
+}
+/* GROWBRIDGE FORMS */
+
+form {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+form label {
+    color: #cbd5e1;
+}
+
+form input,
+form select {
+    background: #0f172a;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    padding: 12px;
+}
+
+form input:focus,
+form select:focus {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    outline: none;
+}
+
+/* GROWBRIDGE BUTTONS */
+
+button {
+    background: #059669;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    padding: 11px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background: #047857;
+    transform: translateY(-2px);
+}
+/* GROWBRIDGE TABLE DESIGN */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(30, 41, 59, 0.75);
+    border-radius: 12px;
+    overflow: hidden;
+    color: #e2e8f0;
+    margin-bottom: 30px;
+}
+
+thead {
+    background: #1e293b;
+}
+
+th {
+    color: #34d399;
+    font-size: 13px;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+td {
+    padding: 14px 15px;
+    border-bottom: 1px solid #334155;
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background: rgba(16, 185, 129, 0.08);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* TABLE ACTION BUTTONS */
+
+td button {
+    margin: 3px;
+    padding: 7px 12px;
+    font-size: 12px;
+}
+
+/* GROWBRIDGE GLASS PANELS */
+
+.main-content main > section {
+    background: rgba(30, 41, 59, 0.35);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* SECTION HEADINGS */
+
+.main-content section h2 {
+    color: #f8fafc;
+    font-size: 23px;
+    font-weight: 750;
+    margin-bottom: 20px;
+}
+
+.main-content section h3 {
+    color: #e2e8f0;
+    margin-bottom: 15px;
+}
+
+/* HIDE CUSTOMER MANAGEMENT */
+
+#customers {
+    display: none;
+}
+
+/* GROWBRIDGE FOOTER */
+
+footer {
+    text-align: center;
+    color: #94a3b8;
+    padding: 25px 10px;
+    font-size: 13px;
+}
+
+/* MOBILE GLASS PANELS */
+
+@media (max-width: 768px) {
+    .main-content main > section {
+        padding: 16px;
+    }
+}
+/* GROWBRIDGE GLASS BACKGROUND */
+
+body {
+    background:
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.16), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.12), transparent 30%),
+        #0b1120;
+}
+
+/* GLASS PANELS */
+
+.main-content main > section {
+    background: rgba(30, 41, 59, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+/* PREMIUM DASHBOARD CARDS */
+
+.dashboard-card {
+    background: linear-gradient(
+        145deg,
+        rgba(30, 41, 59, 0.85),
+        rgba(15, 23, 42, 0.65)
+    );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 24px;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    border-color: #10b981;
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12);
+}
+
+.dashboard-card h3 {
+    color: #94a3b8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dashboard-card p {
+    color: #34d399;
+    font-size: 28px;
+    font-weight: 800;
+}
+/* PREMIUM BUSINESS REPORT CARDS */
+
+.reports-section .report-card {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(33.333% - 15px);
+    min-width: 180px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        145deg,
+        rgba(30, 41, 59, 0.85),
+        rgba(15, 23, 42, 0.65)
+    );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 24px;
+    margin: 0 10px 20px 0;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+}
+
+.reports-section .report-card:hover {
+    transform: translateY(-5px);
+    border-color: #10b981;
+}
+
+.reports-section .report-card h3 {
+    color: #94a3b8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reports-section .report-card p {
+    color: #34d399;
+    font-size: 25px;
+    font-weight: 800;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .reports-section .report-card {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* MOBILE-FRIENDLY TABLES */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 600px;
+}
+
+.table-responsive th,
+.table-responsive td {
+    white-space: nowrap;
 }

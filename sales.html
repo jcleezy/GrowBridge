@@ -12,76 +12,16 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://jcleezy.github.io/GrowBridge/">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2">
+<meta name="theme-color" content="#0f766e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=3">
     <meta name="google-site-verification" content="qMsInRSPELp8Fs43n4bt-rYABZIbTyydQg8K0vQ_0S0" />
 
-<style>
-body.page-dashboard main section:not(#dashboard),
-body.page-inventory main section:not(#inventory),
-body.page-sales main section:not(#sales),
-body.page-reports main section:not(#reports),
-body.page-customers main section:not(#customers) {
-    display: none !important;
-}
-body.page-dashboard .nav-link[href="dashboard.html"],
-body.page-inventory .nav-link[href="inventory.html"],
-body.page-sales .nav-link[href="sales.html"],
-body.page-reports .nav-link[href="reports.html"],
-body.page-customers .nav-link[href="customers.html"] {
-    background-color: #16a34a;
-}
-</style>
 
-<style>
-body.page-dashboard main section:not(#dashboard),
-body.page-inventory main section:not(#inventory),
-body.page-sales main section:not(#sales),
-body.page-reports main section:not(#reports),
-body.page-customers main section:not(#customers) {
-    display: none !important;
-}
-body.page-dashboard .nav-link[href="dashboard.html"],
-body.page-inventory .nav-link[href="inventory.html"],
-body.page-sales .nav-link[href="sales.html"],
-body.page-reports .nav-link[href="reports.html"],
-body.page-customers .nav-link[href="customers.html"] {
-    background-color: #16a34a;
-}
-</style>
 
-<style>
-body.page-dashboard main section:not(#dashboard),
-body.page-inventory main section:not(#inventory),
-body.page-sales main section:not(#sales),
-body.page-reports main section:not(#reports),
-body.page-customers main section:not(#customers) {
-    display: none !important;
-}
-body.page-dashboard .nav-link[href="dashboard.html"],
-body.page-inventory .nav-link[href="inventory.html"],
-body.page-sales .nav-link[href="sales.html"],
-body.page-reports .nav-link[href="reports.html"],
-body.page-customers .nav-link[href="customers.html"] {
-    background-color: #16a34a;
-}
-</style>
 
-<style>
-body.page-dashboard main section:not(#dashboard),
-body.page-inventory main section:not(#inventory),
-body.page-sales main section:not(#sales),
-body.page-reports main section:not(#reports),
-body.page-customers main section:not(#customers) {
-    display: none !important;
-}
-body.page-dashboard .nav-link[href="dashboard.html"],
-body.page-inventory .nav-link[href="inventory.html"],
-body.page-sales .nav-link[href="sales.html"],
-body.page-reports .nav-link[href="reports.html"],
-body.page-customers .nav-link[href="customers.html"] {
-    background-color: #16a34a;
-}
-</style>
 </head>
 
 <body class="page-sales">
@@ -230,6 +170,7 @@ body.page-customers .nav-link[href="customers.html"] {
 
     <div class="chart-container">
         <canvas id="sales-performance-chart"></canvas>
+        <p id="sales-chart-empty" class="chart-empty"></p>
     </div>
 
 </div>
@@ -267,7 +208,7 @@ body.page-customers .nav-link[href="customers.html"] {
             <p id="total-value">Total Stock Value: TSh 0</p>
 
             <div class="table-responsive">
-<table border="1">
+<table>
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -328,7 +269,7 @@ body.page-customers .nav-link[href="customers.html"] {
             <h3>Sales History</h3>
 
             <div class="table-responsive">
-<table border="1">
+<table>
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -366,7 +307,7 @@ body.page-customers .nav-link[href="customers.html"] {
             <h3>Recent Sales</h3>
 
             <div class="table-responsive">
-<table border="1">
+<table>
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -407,7 +348,7 @@ body.page-customers .nav-link[href="customers.html"] {
             <h3>Registered Customers</h3>
 
             <div class="table-responsive">
-<table border="1">
+<table>
                 <thead>
                     <tr>
                         <th>Customer Name</th>

@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
     <meta name="google-site-verification" content="qMsInRSPELp8Fs43n4bt-rYABZIbTyydQg8K0vQ_0S0" />
 
 
@@ -266,7 +266,10 @@
 </div>
             <h3 id="total-sales">Total Sales: TSh 0</h3>
 
-            <h3>Sales History</h3>
+            <div class="section-bar">
+                <h3>Sales History</h3>
+                <button type="button" id="clear-sales-history" class="btn-danger">Clear all</button>
+            </div>
 
             <div class="table-responsive">
 <table>
@@ -277,6 +280,7 @@
                         <th>Unit Price</th>
                         <th>Total</th>
                         <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -370,6 +374,20 @@
 
     </main>
     </div>
+<dialog id="sale-dialog">
+    <div class="dialog-body">
+        <h3 id="sale-dialog-title"></h3>
+        <p id="sale-dialog-text"></p>
+        <label class="check">
+            <input type="checkbox" id="sale-dialog-restore">
+            <span>Return the sold units back to stock</span>
+        </label>
+        <div class="dialog-actions">
+            <button type="button" id="sale-dialog-cancel" class="btn-ghost">Keep it</button>
+            <button type="button" id="sale-dialog-confirm" class="btn-danger">Delete</button>
+        </div>
+    </div>
+</dialog>
 <button id="back-to-top">↑ Back to Top</button>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>

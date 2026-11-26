@@ -1,3 +1,4 @@
+window.GROWBRIDGE_JS_VERSION = 6;
 	// GROWBRIDGE PRODUCT INVENTORY
 let products = JSON.parse(localStorage.getItem("growbridgeProducts")) || [
     { name: "Rice", price: 2500, quantity: 10 },
@@ -54,20 +55,33 @@ let recentSalesTable =
 
 // DISPLAY SALES HISTORY
 
+function esc(value) {
+    return String(value).replace(/[&<>"']/g, function(c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+}
+
 function displaySalesHistory() {
 
     salesHistoryTable.innerHTML = "";
 
-    salesHistory.forEach(function(sale) {
+    if (salesHistory.length === 0) {
+        salesHistoryTable.innerHTML =
+            '<tr><td colspan="6" class="empty-row">No sales recorded yet.</td></tr>';
+        return;
+    }
+
+    salesHistory.forEach(function(sale, index) {
 
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${sale.productName}</td>
-            <td>${sale.quantity}</td>
+            <td>${esc(sale.productName)}</td>
+            <td>${esc(sale.quantity)}</td>
             <td>TSh ${Number(sale.unitPrice).toLocaleString("en-TZ")}</td>
             <td>TSh ${Number(sale.total).toLocaleString("en-TZ")}</td>
             <td>${new Date(sale.date).toLocaleString()}</td>
+            <td><button type="button" data-delete-sale="${index}">Delete</button></td>
         `;
 
         salesHistoryTable.appendChild(row);
@@ -107,15 +121,23 @@ console.log("Sales history count:", salesHistory.length);
 
     let recentSales = salesHistory.slice(-5).reverse();
 
-    recentSales.forEach(function(sale) {
+    if (recentSales.length === 0) {
+        recentSalesTable.innerHTML =
+            '<tr><td colspan="5" class="empty-row">No sales recorded yet.</td></tr>';
+        return;
+    }
+
+    recentSales.forEach(function(sale, i) {
 
         let row = document.createElement("tr");
+        let realIndex = salesHistory.length - 1 - i;
 
         row.innerHTML = `
-            <td>${sale.productName}</td>
-            <td>${sale.quantity}</td>
+            <td>${esc(sale.productName)}</td>
+            <td>${esc(sale.quantity)}</td>
             <td>TSh ${Number(sale.total).toLocaleString("en-TZ")}</td>
             <td>${new Date(sale.date).toLocaleString()}</td>
+            <td><button type="button" data-delete-sale="${realIndex}">Delete</button></td>
         `;
 
         recentSalesTable.appendChild(row);
@@ -371,7 +393,7 @@ function displayProducts() {
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${product.name}</td>
+            <td>${esc(product.name)}</td>
             <td>TSh ${product.price.toLocaleString("en-TZ")}</td>
             <td>${product.quantity}</td>
             <td>
@@ -380,9 +402,8 @@ function displayProducts() {
                     : '<span class="available">Available</span>'}
             </td>
             <td>
-                <button onclick="deleteProduct(${products.indexOf(product)})">
-                    Delete
-                </button>
+                <button type="button" onclick="editProduct(${products.indexOf(product)})">Edit</button>
+                <button type="button" onclick="deleteProduct(${products.indexOf(product)})">Delete</button>
             </td>
         `;
 
@@ -465,8 +486,9 @@ if (!Number.isFinite(price) || !Number.isFinite(quantity) || price <= 0 || quant
         quantity: quantity
     });
 
-    displaySalesHistory();displaySalesHistory();
-displayBusinessReports();displayProducts();
+    displaySalesHistory();
+displayBusinessReports();
+displayProducts();
 
     productForm.reset();
 
@@ -569,6 +591,10 @@ document.getElementById("receipt-total").textContent =
 });
 // Delete a product
 function deleteProduct(index) {
+
+    if (!products[index] || !confirm('Delete "' + products[index].name + '" from inventory?')) {
+        return;
+    }
 
     products.splice(index, 1);
 
@@ -814,7 +840,7 @@ function updateSalesPerformanceChart() {
             labels: labels,
 
             datasets: [{
-                label: "Daily Revenue",
+                label: (window.gbT ? window.gbT("Daily Revenue") : "Daily Revenue"),
                 data: values,
                 borderColor: "#16a34a",
                 backgroundColor: "rgba(22, 163, 74, 0.12)",
@@ -863,3 +889,92 @@ function updateSalesPerformanceChart() {
 
 // INITIALIZE DASHBOARD CHART
 updateSalesPerformanceChart();
+
+
+// ==========================================================
+// DELETE SALES RECORDS (single or all) — with optional stock return
+// ==========================================================
+let saleDialog = document.getElementById("sale-dialog");
+let pendingDelete = null;
+
+function openSaleDialog(mode, index) {
+    pendingDelete = { mode: mode, index: index };
+
+    let title = document.getElementById("sale-dialog-title");
+    let text = document.getElementById("sale-dialog-text");
+
+    if (mode === "all") {
+        title.textContent = "Clear all sales history?";
+        text.textContent = "All " + salesHistory.length +
+            " sale records will be removed. Reports and totals will update. This cannot be undone.";
+    } else {
+        let sale = salesHistory[index];
+        title.textContent = "Delete this sale?";
+        text.textContent = sale.quantity + " × " + sale.productName +
+            " (TSh " + Number(sale.total).toLocaleString("en-TZ") + "). This cannot be undone.";
+    }
+
+    document.getElementById("sale-dialog-restore").checked = false;
+    saleDialog.showModal();
+}
+
+function removeSale(sale, restoreStock) {
+    totalSales = Math.max(0, totalSales - Number(sale.total || 0));
+
+    if (restoreStock) {
+        let product = products.find(function(p) { return p.name === sale.productName; });
+        if (product) product.quantity += Number(sale.quantity || 0);
+    }
+}
+
+if (saleDialog) {
+
+    [salesHistoryTable, recentSalesTable].forEach(function(table) {
+        table.addEventListener("click", function(event) {
+            let button = event.target.closest("[data-delete-sale]");
+            if (button) openSaleDialog("one", Number(button.dataset.deleteSale));
+        });
+    });
+
+    document.querySelectorAll("[data-clear-sales]").forEach(function(clearBtn) {
+        clearBtn.addEventListener("click", function() {
+            if (salesHistory.length === 0) {
+                alert("There are no sales records to clear.");
+                return;
+            }
+            openSaleDialog("all");
+        });
+    });
+
+    document.getElementById("sale-dialog-cancel").addEventListener("click", function() {
+        saleDialog.close();
+    });
+
+    document.getElementById("sale-dialog-confirm").addEventListener("click", function() {
+        let restore = document.getElementById("sale-dialog-restore").checked;
+
+        if (pendingDelete.mode === "all") {
+            salesHistory.forEach(function(sale) { removeSale(sale, restore); });
+            salesHistory = [];
+            totalSales = 0;
+        } else {
+            let sale = salesHistory[pendingDelete.index];
+            if (sale) {
+                removeSale(sale, restore);
+                salesHistory.splice(pendingDelete.index, 1);
+            }
+        }
+
+        localStorage.setItem("growbridgeSalesHistory", JSON.stringify(salesHistory));
+        localStorage.setItem("growbridgeTotalSales", totalSales);
+
+        displayProducts();
+        displaySalesHistory();
+        displayBusinessReports();
+        updateSalesPerformanceChart();
+        totalSalesDisplay.textContent =
+            "Total Sales: TSh " + totalSales.toLocaleString("en-TZ");
+
+        saleDialog.close();
+    });
+}

@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
     <meta name="google-site-verification" content="qMsInRSPELp8Fs43n4bt-rYABZIbTyydQg8K0vQ_0S0" />
 
 
@@ -268,7 +268,7 @@
 
             <div class="section-bar">
                 <h3>Sales History</h3>
-                <button type="button" id="clear-sales-history" class="btn-danger">Clear all</button>
+                <button type="button" id="clear-sales-history" data-clear-sales class="btn-danger">Clear all</button>
             </div>
 
             <div class="table-responsive">
@@ -308,7 +308,10 @@
                 <p id="report-products-sold">0</p>
             </div>
 
-            <h3>Recent Sales</h3>
+            <div class="section-bar">
+                <h3>Recent Sales</h3>
+                <button type="button" data-clear-sales class="btn-danger">Clear all</button>
+            </div>
 
             <div class="table-responsive">
 <table>
@@ -318,6 +321,7 @@
                         <th>Quantity</th>
                         <th>Total</th>
                         <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -390,7 +394,8 @@
 </dialog>
 <button id="back-to-top">↑ Back to Top</button>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js?v=5"></script>
-<script src="assistant.js?v=5"></script>
+<script src="i18n.js?v=6"></script>
+<script src="script.js?v=6"></script>
+<script src="assistant.js?v=6"></script>
 </body>
 </html>

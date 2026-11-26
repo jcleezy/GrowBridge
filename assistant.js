@@ -4,7 +4,7 @@
     "use strict";
 
     var LANG_KEY = "growbridgeAssistantLang";
-    var state = { lang: localStorage.getItem(LANG_KEY) || "auto", last: "en", dir: "en|sw", tab: "chat" };
+    var state = { lang: localStorage.getItem("growbridgeLang") || localStorage.getItem(LANG_KEY) || "auto", last: "en", dir: "en|sw", tab: "chat" };
 
     // ---------- helpers ----------
     function el(tag, cls, text) {
@@ -51,16 +51,16 @@
         if (has(text, /(how|jinsi|namna|nawezaje|naweza(je)?|ninawezaje|kuongeza|kufuta|kuuza)/)) {
             if (has(text, /(add|new|ongeza|kuongeza|mpya).*(product|item|bidhaa)|(product|bidhaa).*(add|ongeza)/))
                 return t("To add a product: open Inventory, fill in the name, price and quantity, then press Add Product.",
-                    "Kuongeza bidhaa: fungua Inventory, jaza jina, bei na idadi, kisha bonyeza Add Product.");
+                    "Kuongeza bidhaa: fungua Stoo (Inventory), jaza jina, bei na idadi, kisha bonyeza Add Product.");
             if (has(text, /(delete|remove|futa|kufuta).*(sale|mauzo)|(sale|mauzo).*(delete|futa)/))
                 return t("To delete a sale: open Sales, scroll to Sales History and press Delete next to the record. You can choose to return the units to stock, or press Keep it to cancel.",
-                    "Kufuta mauzo: fungua Sales, shuka hadi Sales History na bonyeza Delete kwenye rekodi. Unaweza kuchagua kurudisha bidhaa stoo, au bonyeza Keep it kughairi.");
+                    "Kufuta mauzo: fungua Mauzo (Sales), shuka hadi Sales History na bonyeza Delete kwenye rekodi. Unaweza kuchagua kurudisha bidhaa stoo, au bonyeza Keep it kughairi.");
             if (has(text, /(sale|sell|uza|kuuza|mauzo)/))
                 return t("To record a sale: open Sales, choose the product, enter the quantity and press Record Sale. A receipt is created automatically and stock goes down.",
-                    "Kurekodi mauzo: fungua Sales, chagua bidhaa, weka idadi na bonyeza Record Sale. Risiti hutengenezwa yenyewe na stoo hupungua.");
+                    "Kurekodi mauzo: fungua Mauzo (Sales), chagua bidhaa, weka idadi na bonyeza Record Sale. Risiti hutengenezwa yenyewe na stoo hupungua.");
             if (has(text, /(customer|mteja|wateja)/))
                 return t("To add a customer: open Customers, enter the name and phone number and press Add Customer.",
-                    "Kuongeza mteja: fungua Customers, weka jina na namba ya simu kisha bonyeza Add Customer.");
+                    "Kuongeza mteja: fungua Wateja (Customers), weka jina na namba ya simu kisha bonyeza Add Customer.");
         }
 
         // a specific product mentioned?
@@ -318,6 +318,13 @@
         if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(function () {});
         copyBtn.textContent = "✓";
         setTimeout(function () { copyBtn.textContent = "Copy"; }, 1200);
+    });
+
+    document.addEventListener("gb-lang", function (e) {
+        state.lang = e.detail;
+        render();
+        log.textContent = "";
+        addMsg(ui().welcome, "bot");
     });
 
     setTab("chat");

@@ -470,3 +470,33 @@ dialog::backdrop { background: rgba(8, 20, 18, .45); -webkit-backdrop-filter: bl
     .gb-panel { left: auto; right: 24px; bottom: 24px; width: 390px; height: 560px; }
 }
 @media print { .gb-fab, .gb-panel { display: none !important; } }
+
+/* ==========================================================
+   v6 — Language switch & notices
+   ========================================================== */
+.lang-switch {
+    display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px;
+    background: var(--glass-strong); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+}
+.lang-switch button {
+    min-height: 32px; padding: 4px 14px; font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+    background: transparent; color: var(--muted); border-radius: 999px;
+}
+.lang-switch button:hover { background: var(--brand-50); color: var(--brand); }
+.lang-switch button.on { background: var(--brand); color: #fff; }
+@media (prefers-color-scheme: dark) { .lang-switch button.on { color: #04201c; } }
+.app-header .lang-switch { margin-left: auto; align-self: center; }
+.app-header { align-items: center; }
+.app-header p { display: none; }
+.lang-switch.in-page { display: none; }
+@media (min-width: 960px) {
+    .lang-switch.in-page { display: flex; width: max-content; margin: -12px 0 16px auto; }
+}
+.gb-warn {
+    position: fixed; z-index: 80; left: 12px; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px));
+    display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 14px;
+    background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); font-size: .88rem; font-weight: 600;
+    box-shadow: var(--shadow);
+}
+.gb-warn button { flex: none; min-height: 34px; padding: 4px 12px; background: var(--warn); color: #fff; }

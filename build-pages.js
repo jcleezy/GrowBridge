@@ -7,6 +7,7 @@ const pages = [
     ["dashboard.html", "dashboard"],
     ["inventory.html", "inventory"],
     ["sales.html", "sales"],
+    ["orders.html", "orders"],
     ["reports.html", "reports"],
     ["customers.html", "customers"]
 ];
@@ -15,6 +16,7 @@ const destinations = {
     dashboard: "dashboard.html",
     inventory: "inventory.html",
     sales: "sales.html",
+    orders: "orders.html",
     reports: "reports.html",
     customers: "customers.html"
 };
@@ -39,25 +41,6 @@ html = html.replace(
         );
     }
 
-    const css = `
-<style>
-body.page-dashboard main section:not(#dashboard),
-body.page-inventory main section:not(#inventory),
-body.page-sales main section:not(#sales),
-body.page-reports main section:not(#reports),
-body.page-customers main section:not(#customers) {
-    display: none !important;
-}
-body.page-dashboard .nav-link[href="dashboard.html"],
-body.page-inventory .nav-link[href="inventory.html"],
-body.page-sales .nav-link[href="sales.html"],
-body.page-reports .nav-link[href="reports.html"],
-body.page-customers .nav-link[href="customers.html"] {
-    background-color: #16a34a;
-}
-</style>`;
-
-    html = html.replace("</head>", css + "\n</head>");
 
     fs.writeFileSync(filename, html);
     console.log("Created:", filename);

@@ -264,7 +264,7 @@
 
     // ---------- warn if script.js on the server is outdated ----------
     document.addEventListener("gb-scripts-loaded", function () {
-        if ((window.GROWBRIDGE_JS_VERSION || 0) >= 6) return;
+        if ((window.GROWBRIDGE_JS_VERSION || 0) >= 6 || document.body.dataset.app === "shop") return;
         var bar = document.createElement("div");
         bar.className = "gb-warn";
         var msg = document.createElement("span");

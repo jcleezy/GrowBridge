@@ -10,9 +10,9 @@
     var DIRTY_KEY = "growbridgeDirty";
     var UID_KEY = "growbridgeUserId";
     var SDK_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js";
-    var V = "?v=8";
+    var V = "?v=9";
 
-    var client = null, session = null, signingOut = false;
+    var client = null, session = null, signingOut = false, role = localStorage.getItem("growbridgeRole") || "seller";
     var dirty = {}, dirtyVer = {}, timer = null, retry = null, pill = null;
     var nativeSet = Storage.prototype.setItem;
 
@@ -33,8 +33,9 @@
         });
     }
     function startApp() {
-        return loadScript("script.js" + V)
-            .then(function () { return loadScript("assistant.js" + V); })
+        var list = document.body.dataset.app === "shop" ? ["shop.js"] : ["script.js", "assistant.js"];
+        if (document.body.classList.contains("page-orders")) list.push("orders.js");
+        return list.reduce(function (p, f) { return p.then(function () { return loadScript(f + V); }); }, Promise.resolve())
             .then(function () { document.dispatchEvent(new CustomEvent("gb-scripts-loaded")); });
     }
     function parseVal(raw) { try { return JSON.parse(raw); } catch (e) { return raw; } }
@@ -95,6 +96,7 @@
             if (res.error) throw res.error;
             keys.forEach(function (k) { if (dirtyVer[k] === snapshot[k]) delete dirty[k]; });
             persistDirty();
+            if (keys.indexOf("growbridgeProducts") !== -1 && role === "seller") mirrorProducts();
             clearTimeout(retry);
             setStatus(Object.keys(dirty).length ? "saving" : "saved");
             if (Object.keys(dirty).length) flush();
@@ -110,6 +112,44 @@
     document.addEventListener("visibilitychange", function () {
         if (document.visibilityState === "hidden") flush();
     });
+
+    // Marketplace: the seller's inventory is mirrored into the shared `products` table so buyers can see it.
+    function mirrorProducts() {
+        var list = parseVal(localStorage.getItem("growbridgeProducts"));
+        if (!Array.isArray(list)) return Promise.resolve();
+        var uid = session.user.id, now = new Date().toISOString();
+        var rows = list.filter(function (p) { return p && p.name; }).map(function (p) {
+            return { seller_id: uid, name: String(p.name), price: Number(p.price) || 0, quantity: Math.max(0, parseInt(p.quantity, 10) || 0), updated_at: now };
+        });
+        var step = rows.length ? client.from("products").upsert(rows, { onConflict: "seller_id,name" }) : Promise.resolve({});
+        return step.then(function (r) {
+            if (r && r.error) throw r.error;
+            return client.from("products").select("name").eq("seller_id", uid);
+        }).then(function (r) {
+            var keep = rows.map(function (x) { return x.name; });
+            var gone = ((r && r.data) || []).map(function (x) { return x.name; }).filter(function (n) { return keep.indexOf(n) === -1; });
+            if (gone.length) return client.from("products").delete().eq("seller_id", uid).in("name", gone);
+        }).catch(function () {});               // best-effort: the app keeps working if the marketplace tables are missing
+    }
+    // Stock can change while the seller is away (buyer orders / cancellations): the shared table is the truth for quantities.
+    function pullStock() {
+        return client.from("products").select("name,quantity").eq("seller_id", session.user.id).then(function (r) {
+            if (!r || r.error || !r.data || !r.data.length) return;
+            var list = parseVal(localStorage.getItem("growbridgeProducts"));
+            if (!Array.isArray(list)) return;
+            var map = {};
+            r.data.forEach(function (x) { map[x.name] = x.quantity; });
+            list.forEach(function (p) { if (p && Object.prototype.hasOwnProperty.call(map, p.name)) p.quantity = map[p.name]; });
+            nativeSet.call(localStorage, "growbridgeProducts", JSON.stringify(list));
+        }).catch(function () {});
+    }
+    function loadProfile() {
+        return client.from("profiles").select("role,shop_name").eq("id", session.user.id).maybeSingle().then(function (r) {
+            if (r && r.data) return r.data;
+            return client.from("profiles").insert({ id: session.user.id, role: "seller" }).select("role,shop_name").single()
+                .then(function (x) { return (x && x.data) || { role: "seller" }; });
+        }).catch(function () { return { role: role }; });
+    }
 
     function pull() {
         return client.from("app_data").select("key,value").then(function (res) {
@@ -187,7 +227,17 @@
             var msg = el("p", "gb-auth-msg", note || "");
             msg.setAttribute("role", "alert");
 
-            card.append(title, sub, tabs, lEmail, email, lPass, pass, go, forgot, msg);
+            var who = "buyer";
+            var roleBox = el("div", "gb-auth-tabs");
+            var rBuy = el("button", "on", "I am a buyer");
+            var rSell = el("button", "", "I am a seller");
+            rBuy.type = rSell.type = "button";
+            roleBox.hidden = true;
+            roleBox.append(rBuy, rSell);
+            rBuy.addEventListener("click", function () { who = "buyer"; rBuy.className = "on"; rSell.className = ""; });
+            rSell.addEventListener("click", function () { who = "seller"; rSell.className = "on"; rBuy.className = ""; });
+
+            card.append(title, sub, tabs, roleBox, lEmail, email, lPass, pass, go, forgot, msg);
 
             if (localStorage.getItem(UID_KEY)) {                      // this device has used the app before
                 var off = el("button", "gb-auth-link", "Continue offline");
@@ -204,6 +254,7 @@
                 go.textContent = m === "in" ? "Sign in" : "Create account";
                 pass.autocomplete = m === "in" ? "current-password" : "new-password";
                 forgot.hidden = m === "up";
+                roleBox.hidden = m !== "up";
                 msg.textContent = "";
             }
             function busy(on) { go.disabled = on; go.textContent = on ? "Please wait…" : (mode === "in" ? "Sign in" : "Create account"); }
@@ -215,7 +266,7 @@
                 busy(true);
                 var req = mode === "in"
                     ? client.auth.signInWithPassword({ email: e, password: p })
-                    : client.auth.signUp({ email: e, password: p });
+                    : client.auth.signUp({ email: e, password: p, options: { data: { role: who } } });
                 req.then(function (res) {
                     busy(false);
                     if (res.error) { say(friendly(res.error)); return; }
@@ -316,8 +367,16 @@
         nativeSet.call(localStorage, UID_KEY, uid);
 
         showLoading();
-        return flush().then(pull).then(function () { setStatus("saved"); }).catch(function () { setStatus("offline"); });
+        return loadProfile().then(function (profile) {
+            role = profile.role === "buyer" ? "buyer" : "seller";
+            nativeSet.call(localStorage, "growbridgeRole", role);
+            var onShop = document.body.dataset.app === "shop";
+            if (role === "buyer" && !onShop) { location.replace("shop.html"); return new Promise(function () {}); }
+            if (role === "buyer") return;                              // buyers have no seller data to sync
+            return flush().then(pull).then(pullStock).then(function () { setStatus("saved"); }).catch(function () { setStatus("offline"); });
+        });
     }).then(function () {
+        window.gbCloud = { client: client, session: session, role: role };
         closeOverlay();
         lockPage(false);
         if (session) {

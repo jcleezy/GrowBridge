@@ -604,3 +604,29 @@ html.gb-locked #back-to-top { visibility: hidden; }
 .gb-sync-offline { color: var(--warn); background: var(--warn-bg); }
 @media (min-width: 960px) { .gb-sync { left: calc(var(--sidebar-w) + 16px); bottom: 16px; } }
 @media print { .gb-sync, .gb-auth { display: none !important; } }
+
+/* ==========================================================
+   v9 — Marketplace: shop page, orders
+   ========================================================== */
+body.shop-app { padding: 0 0 40px; }
+.shop-app .app-header { position: sticky; }
+.shop-tabs { margin: 4px 0 16px; }
+.shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+.shop-card p { font-size: 1.2rem; }
+.shop-card button { margin-top: 8px; width: 100%; }
+.cart-box { gap: 8px; margin-bottom: 12px; align-items: stretch; }
+.cart-box h3 { font-size: 1rem; color: var(--ink); }
+.cart-box small { color: var(--muted); font-size: .82rem; }
+.cart-box textarea { width: 100%; font: inherit; color: var(--ink); background: var(--glass-strong); border: 1.5px solid var(--glass-border); border-radius: var(--radius-sm); padding: 10px 12px; resize: vertical; }
+.cart-row { display: flex; align-items: center; gap: 8px; }
+.cart-row span { flex: 1; }
+.pay-opts { display: flex; gap: 6px; flex-wrap: wrap; }
+.pay-opts button { flex: 1; min-height: 38px; background: var(--brand-50); color: var(--brand); }
+.pay-opts button.on { background: var(--brand); color: #fff; }
+.orders-list { display: grid; gap: 12px; }
+.orders-list .dashboard-card:last-child { grid-column: auto; }
+@media (min-width: 600px) { .shop-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 960px) { .shop-grid { grid-template-columns: repeat(4, 1fr); } .shop-app .main-content { max-width: 1000px; } .orders-list { grid-template-columns: repeat(2, 1fr); } }
+body.page-orders main section:not(#orders) { display: none !important; }
+body.page-orders .nav-link[href="orders.html"] { color: var(--brand); background: var(--brand-50); }
+body.page-orders .sales-analytics { display: none; }

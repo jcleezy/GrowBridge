@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
     <meta name="google-site-verification" content="qMsInRSPELp8Fs43n4bt-rYABZIbTyydQg8K0vQ_0S0" />
 
 
@@ -53,6 +53,10 @@
 
         <a href="sales.html" class="nav-link">
             <span>↗</span> Sales
+        </a>
+
+        <a href="orders.html" class="nav-link">
+            <span>✉</span> Orders
         </a>
 
         <a href="customers.html" class="nav-link">
@@ -290,6 +294,27 @@
         </section>
 
         <!-- BUSINESS REPORTS -->
+        <section id="orders">
+            <h2>Orders</h2>
+            <form id="shop-profile-form">
+                <label for="shop-name">Shop name</label>
+                <input id="shop-name" placeholder="Your shop name">
+                <label for="shop-phone">Phone</label>
+                <input id="shop-phone" placeholder="Phone number">
+                <label for="momo-network">Mobile money network</label>
+                <select id="momo-network">
+                    <option value="">None</option><option>M-Pesa</option><option>Tigo Pesa</option>
+                    <option>Airtel Money</option><option>HaloPesa</option>
+                </select>
+                <label for="momo-number">Mobile money number</label>
+                <input id="momo-number" placeholder="Number buyers pay to">
+                <button type="submit">Save shop details</button>
+                <p id="shop-profile-msg" class="gb-auth-msg"></p>
+            </form>
+            <h3>Incoming orders</h3>
+            <div id="orders-list" class="orders-list"></div>
+        </section>
+
         <section id="reports" class="reports-section">
             <h2>Business Reports</h2>
 
@@ -394,8 +419,8 @@
 </dialog>
 <button id="back-to-top">↑ Back to Top</button>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="i18n.js?v=8"></script>
-<script src="supabase-config.js?v=8"></script>
-<script src="supabase-sync.js?v=8"></script>
+<script src="i18n.js?v=9"></script>
+<script src="supabase-config.js?v=9"></script>
+<script src="supabase-sync.js?v=9"></script>
 </body>
 </html>

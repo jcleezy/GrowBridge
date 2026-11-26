@@ -553,3 +553,54 @@ body::after {
 @keyframes waves {
     to { background-position: 900px 100%, -1600px 100%, 1200px 100%; }
 }
+
+/* ==========================================================
+   v8 — Login screen, account buttons, sync pill
+   ========================================================== */
+html.gb-locked .sidebar, html.gb-locked .app-header, html.gb-locked .main-content,
+html.gb-locked #back-to-top { visibility: hidden; }
+
+.gb-auth {
+    position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px;
+    background: rgba(8, 20, 18, .18); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    overflow-y: auto;
+}
+.gb-auth-card {
+    width: 100%; max-width: 400px; padding: 28px 24px; border-radius: 24px; display: grid; gap: 8px;
+    background: var(--glass-strong); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    box-shadow: 0 24px 70px rgba(8, 30, 27, .35), inset 0 1px 0 rgba(255, 255, 255, .4);
+}
+.gb-auth-card h1 { font-size: 1.9rem; font-weight: 800; color: var(--brand); text-align: center; }
+.gb-auth-sub { margin: 0 0 8px; text-align: center; color: var(--muted); }
+.gb-auth-center { text-align: center; justify-items: center; }
+.gb-auth-tabs { display: flex; gap: 6px; padding: 4px; border-radius: 12px; background: var(--brand-50); margin-bottom: 6px; }
+.gb-auth-tabs button { flex: 1; min-height: 38px; background: transparent; color: var(--muted); }
+.gb-auth-tabs button.on { background: var(--brand); color: #fff; }
+@media (prefers-color-scheme: dark) { .gb-auth-tabs button.on { color: #04201c; } }
+.gb-auth-go { margin-top: 10px; width: 100%; }
+.gb-auth-go:disabled { opacity: .6; cursor: wait; }
+.gb-auth-link { background: transparent; color: var(--brand); min-height: 38px; font-size: .9rem; }
+.gb-auth-link:hover { background: var(--brand-50); }
+.gb-auth-msg { margin: 4px 0 0; min-height: 1.3em; color: var(--danger); font-size: .9rem; text-align: center; }
+.gb-auth-msg.good { color: var(--ok); }
+.gb-auth-card .lang-switch { justify-self: center; margin-top: 8px; }
+.gb-spinner { width: 38px; height: 38px; border-radius: 50%; border: 4px solid var(--brand-50); border-top-color: var(--brand); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.gb-signout { min-height: 32px; padding: 4px 12px; font-size: .78rem; background: var(--danger-bg); color: var(--danger); }
+.gb-signout:hover { background: var(--danger); color: #fff; }
+.app-header .gb-signout { margin-left: 8px; }
+.sidebar-footer .gb-signout { margin-top: 10px; width: 100%; }
+.gb-who { margin: 4px 0 0 !important; font-size: .75rem; color: var(--muted); word-break: break-all; font-weight: 400; }
+
+.gb-sync {
+    position: fixed; left: 12px; z-index: 45; padding: 5px 12px; border-radius: 999px; font-size: .72rem; font-weight: 600;
+    bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 12px);
+    background: var(--glass-strong); border: 1px solid var(--glass-border); color: var(--muted);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+}
+.gb-sync-saved { color: var(--ok); }
+.gb-sync-offline { color: var(--warn); background: var(--warn-bg); }
+@media (min-width: 960px) { .gb-sync { left: calc(var(--sidebar-w) + 16px); bottom: 16px; } }
+@media print { .gb-sync, .gb-auth { display: none !important; } }

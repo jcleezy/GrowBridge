@@ -81,6 +81,21 @@
         "Enter new product quantity:": "Weka idadi mpya ya bidhaa:",
         "Your script.js file is outdated. Please upload the latest script.js to GitHub (then refresh with ?v=6).":
             "Faili yako ya script.js ni ya zamani. Tafadhali pakia script.js mpya kwenye GitHub (kisha fungua na ?v=6).",
+        "Loading…": "Inapakia…", "Sign in": "Ingia", "Create account": "Fungua akaunti", "Sign out": "Toka",
+        "Email": "Barua pepe", "Password": "Nenosiri", "Forgot password?": "Umesahau nenosiri?",
+        "Continue offline": "Endelea bila mtandao", "Try again": "Jaribu tena", "Please wait…": "Subiri…",
+        "Sign in to open your business": "Ingia ili kufungua biashara yako",
+        "Enter your email and a password (6+ characters).": "Weka barua pepe na nenosiri (herufi 6 au zaidi).",
+        "Enter your email first.": "Weka barua pepe yako kwanza.",
+        "Invalid email or password.": "Barua pepe au nenosiri si sahihi.",
+        "Email not confirmed. Check your inbox.": "Barua pepe haijathibitishwa. Angalia inbox yako.",
+        "This email already has an account. Sign in instead.": "Barua pepe hii ina akaunti tayari. Ingia badala yake.",
+        "Could not connect. Check your internet and try again.": "Imeshindwa kuunganisha. Angalia mtandao kisha jaribu tena.",
+        "Something went wrong. Please try again.": "Kuna hitilafu. Tafadhali jaribu tena.",
+        "Account created. Check your email to confirm, then sign in.": "Akaunti imefunguliwa. Angalia barua pepe yako kuthibitisha, kisha ingia.",
+        "Password reset link sent to your email.": "Kiungo cha kubadilisha nenosiri kimetumwa kwenye barua pepe yako.",
+        "Some changes are not saved yet. Sign out anyway?": "Baadhi ya mabadiliko hayajahifadhiwa bado. Toka hata hivyo?",
+        "☁ Saving…": "☁ Inahifadhi…", "☁ Saved": "☁ Imehifadhiwa", "☁ Offline — will retry": "☁ Hakuna mtandao — itajaribu tena",
         "Dismiss": "Funga"
     };
 
@@ -221,6 +236,7 @@
         switches.push(box);
         return box;
     }
+    window.gbLangSwitch = function () { var b = makeSwitch("in-auth"); refreshSwitches(); return b; };
     function refreshSwitches() {
         switches.forEach(function (box) {
             Array.prototype.forEach.call(box.children, function (b) {
@@ -247,7 +263,7 @@
     if (main) main.insertBefore(makeSwitch("in-page"), main.firstChild);
 
     // ---------- warn if script.js on the server is outdated ----------
-    window.addEventListener("load", function () {
+    document.addEventListener("gb-scripts-loaded", function () {
         if ((window.GROWBRIDGE_JS_VERSION || 0) >= 6) return;
         var bar = document.createElement("div");
         bar.className = "gb-warn";

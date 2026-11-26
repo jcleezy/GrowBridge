@@ -1,0 +1,970 @@
+	// GROWBRIDGE PRODUCT INVENTORY
+let products = JSON.parse(localStorage.getItem("growbridgeProducts")) || [
+    { name: "Rice", price: 2500, quantity: 10 },
+    { name: "Sugar", price: 3000, quantity: 15 },
+    { name: "Cooking Oil", price: 8000, quantity: 5 }
+];
+
+// Find HTML elements
+let productList = document.getElementById("product-list");
+let totalValue = document.getElementById("total-value");
+let productForm = document.getElementById("product-form");
+// SALES ELEMENTS
+let saleProduct = document.getElementById("sale-product");
+let salesForm = document.getElementById("sales-form");
+let saleMessage = document.getElementById("sale-message");
+let totalSalesDisplay = document.getElementById("total-sales");
+
+let totalSales = Number(localStorage.getItem("growbridgeTotalSales")) || 0;
+// CUSTOMER MANAGEMENT
+
+let customers = JSON.parse(
+    localStorage.getItem("growbridgeCustomers")
+) || [];
+
+let customerForm =
+    document.getElementById("customer-form");
+
+    document.getElementById("customer-list");let customerList =
+    document.getElementById("customer-list");
+    document.getElementById("customer-search");let customerSearch =
+    document.getElementById("customer-search");
+let totalCustomersDisplay =
+    document.getElementById("total-customers");
+// LOAD SALES HISTORY
+let salesHistory = JSON.parse(
+    localStorage.getItem("growbridgeSalesHistory")
+) || [];
+
+let salesHistoryTable =
+    document.getElementById("sales-history");
+// BUSINESS REPORT ELEMENTS
+
+let reportRevenue =
+    document.getElementById("report-revenue");
+
+let reportTransactions =
+    document.getElementById("report-transactions");
+
+let reportProductsSold =
+    document.getElementById("report-products-sold");
+
+let recentSalesTable =
+    document.getElementById("recent-sales");
+
+// DISPLAY SALES HISTORY
+
+function esc(value) {
+    return String(value).replace(/[&<>"']/g, function(c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+}
+
+function displaySalesHistory() {
+
+    salesHistoryTable.innerHTML = "";
+
+    if (salesHistory.length === 0) {
+        salesHistoryTable.innerHTML =
+            '<tr><td colspan="6" class="empty-row">No sales recorded yet.</td></tr>';
+        return;
+    }
+
+    salesHistory.forEach(function(sale, index) {
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${esc(sale.productName)}</td>
+            <td>${esc(sale.quantity)}</td>
+            <td>TSh ${Number(sale.unitPrice).toLocaleString("en-TZ")}</td>
+            <td>TSh ${Number(sale.total).toLocaleString("en-TZ")}</td>
+            <td>${new Date(sale.date).toLocaleString()}</td>
+            <td><button type="button" data-delete-sale="${index}">Delete</button></td>
+        `;
+
+        salesHistoryTable.appendChild(row);
+
+    });
+
+}
+
+// BUSINESS REPORTS FUNCTION
+
+function displayBusinessReports() {
+console.log("Saved sales history:", salesHistory);
+console.log("Sales history count:", salesHistory.length);
+    // Calculate total revenue
+    let totalRevenue = salesHistory.reduce(function(total, sale) {
+        return total + Number(sale.total);
+    }, 0);
+
+    // Count sales transactions
+    let totalTransactions = salesHistory.length;
+
+    // Calculate total products sold
+    let totalProductsSold = salesHistory.reduce(function(total, sale) {
+        return total + Number(sale.quantity);
+    }, 0);
+
+    // Display report figures
+    reportRevenue.textContent =
+        "TSh " + totalRevenue.toLocaleString("en-TZ");
+
+    reportTransactions.textContent = totalTransactions;
+
+    reportProductsSold.textContent = totalProductsSold;
+
+    // Display the five most recent sales
+    recentSalesTable.innerHTML = "";
+
+    let recentSales = salesHistory.slice(-5).reverse();
+
+    recentSales.forEach(function(sale) {
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${esc(sale.productName)}</td>
+            <td>${esc(sale.quantity)}</td>
+            <td>TSh ${Number(sale.total).toLocaleString("en-TZ")}</td>
+            <td>${new Date(sale.date).toLocaleString()}</td>
+        `;
+
+        recentSalesTable.appendChild(row);
+
+    });
+
+}
+// DISPLAY CUSTOMERS
+
+
+
+function displayCustomers() {
+
+    customerList.innerHTML = "";
+totalCustomersDisplay.textContent = customers.length;
+    customers.forEach(function(customer, index) {
+
+        let row = document.createElement("tr");
+
+        let nameCell = document.createElement("td");
+        nameCell.textContent = customer.name;
+
+        let phoneCell = document.createElement("td");
+        phoneCell.textContent = customer.phone;
+
+        let actionCell = document.createElement("td");
+        
+let editButton = document.createElement("button");
+editButton.textContent = "Edit";
+
+editButton.addEventListener("click", function() {
+
+    let newName = prompt("Enter new customer name:", customer.name);
+
+    if (newName === null || newName.trim() === "") {
+        return;
+    }
+
+    let newPhone = prompt("Enter new phone number:", customer.phone);
+
+    if (newPhone === null || newPhone.trim() === "") {
+        return;
+    }
+
+    customers[index].name = newName.trim();
+    customers[index].phone = newPhone.trim();
+
+    localStorage.setItem(
+        "growbridgeCustomers",
+        JSON.stringify(customers)
+    );
+
+    displayCustomers();
+
+    alert("Customer updated successfully!");
+
+});
+
+actionCell.appendChild(editButton);
+
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener("click", function() {
+
+            let confirmDelete = confirm(
+                "Are you sure you want to delete this customer?"
+            );
+
+            if (confirmDelete) {
+
+                customers.splice(index, 1);
+
+                localStorage.setItem(
+                    "growbridgeCustomers",
+                    JSON.stringify(customers)
+                );
+
+                displayCustomers();
+
+            }
+
+        });
+
+        actionCell.appendChild(deleteButton);
+
+        row.appendChild(nameCell);
+        row.appendChild(phoneCell);
+        row.appendChild(actionCell);
+
+        customerList.appendChild(row);
+
+    });
+
+}
+
+
+function searchCustomers() {
+
+    let searchValue = customerSearch.value.toLowerCase();
+
+    customerList.innerHTML = "";
+
+    customers.forEach(function(customer, index) {
+
+        let name = customer.name.toLowerCase();
+        let phone = customer.phone.toLowerCase();
+
+        if (
+            name.includes(searchValue) ||
+            phone.includes(searchValue)
+        ) {
+
+            let row = document.createElement("tr");
+
+            let nameCell = document.createElement("td");
+            nameCell.textContent = customer.name;
+
+            let phoneCell = document.createElement("td");
+            phoneCell.textContent = customer.phone;
+
+            let actionCell = document.createElement("td");
+
+            let editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+
+            editButton.addEventListener("click", function() {
+
+                let newName = prompt("Enter new customer name:", customer.name);
+
+                if (newName === null || newName.trim() === "") return;
+
+                let newPhone = prompt("Enter new phone number:", customer.phone);
+
+                if (newPhone === null || newPhone.trim() === "") return;
+
+                customers[index].name = newName.trim();
+                customers[index].phone = newPhone.trim();
+
+                localStorage.setItem(
+                    "growbridgeCustomers",
+                    JSON.stringify(customers)
+                );
+
+                searchCustomers();
+
+            });
+
+            let deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+
+            deleteButton.addEventListener("click", function() {
+
+                if (confirm("Delete this customer?")) {
+
+                    customers.splice(index, 1);
+
+                    localStorage.setItem(
+                        "growbridgeCustomers",
+                        JSON.stringify(customers)
+                    );
+
+                    searchCustomers();
+
+                }
+
+            });
+
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(deleteButton);
+
+            row.appendChild(nameCell);
+            row.appendChild(phoneCell);
+            row.appendChild(actionCell);
+
+            customerList.appendChild(row);
+
+        }
+
+    });
+
+}
+customerSearch.addEventListener("input", searchCustomers);
+
+ // REGISTER CUSTOMER
+
+customerForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let name = document.getElementById("customer-name").value.trim();
+
+    let phone = document.getElementById("customer-phone").value.trim();
+
+    if (name === "" || phone === "") {
+        alert("Please enter customer name and phone number.");
+        return;
+    }
+
+    let customer = {
+        name: name,
+        phone: phone
+    };
+
+    customers.push(customer);
+
+    localStorage.setItem(
+        "growbridgeCustomers",
+        JSON.stringify(customers)
+    );
+
+    displayCustomers();
+
+    customerForm.reset();
+
+    alert("Customer registered successfully!");
+
+});
+
+// DISPLAY SAVED CUSTOMERS
+displayCustomers();
+
+
+// DISPLAY PRODUCTS
+
+function displayProducts() {
+
+    productList.innerHTML = "";
+
+    let searchInput = document.getElementById("product-search");
+
+    let searchTerm = searchInput
+        ? searchInput.value.toLowerCase()
+        : "";
+
+    let filteredProducts = products.filter(function(product) {
+        return product.name.toLowerCase().includes(searchTerm);
+    });
+
+    localStorage.setItem(
+        "growbridgeProducts",
+        JSON.stringify(products)
+    );
+
+    // Calculate total stock value using ALL products
+    let totalStockValue = products.reduce(function(total, product) {
+        return total + product.price * product.quantity;
+    }, 0);
+
+    // Display matching products
+    filteredProducts.forEach(function(product) {
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${esc(product.name)}</td>
+            <td>TSh ${product.price.toLocaleString("en-TZ")}</td>
+            <td>${product.quantity}</td>
+            <td>
+                ${product.quantity <= 5
+                    ? '<span class="low-stock">LOW STOCK</span>'
+                    : '<span class="available">Available</span>'}
+            </td>
+            <td>
+                <button type="button" onclick="editProduct(${products.indexOf(product)})">Edit</button>
+                <button type="button" onclick="deleteProduct(${products.indexOf(product)})">Delete</button>
+            </td>
+        `;
+
+        productList.appendChild(row);
+
+    });
+
+    totalValue.textContent =
+        "Total Stock Value: TSh " + totalStockValue.toLocaleString("en-TZ");
+
+    // UPDATE DASHBOARD
+
+    document.getElementById("total-products").textContent =
+        products.length;
+
+    document.getElementById("dashboard-stock-value").textContent =
+        "TSh " + totalStockValue.toLocaleString("en-TZ");
+
+    let lowStockCount = products.filter(function(product) {
+        return product.quantity <= 5;
+    }).length;
+
+    document.getElementById("low-stock-count").textContent =
+        lowStockCount;
+
+    let totalUnits = products.reduce(function(total, product) {
+        return total + product.quantity;
+    }, 0);
+
+    document.getElementById("total-units").textContent = totalUnits;
+
+    // UPDATE SALES PRODUCT MENU
+
+    saleProduct.innerHTML =
+        '<option value="">Choose a product</option>';
+
+    products.forEach(function(product, index) {
+
+        let option = document.createElement("option");
+
+        option.value = index;
+
+        option.textContent =
+            product.name + " (Stock: " + product.quantity + ")";
+
+        saleProduct.appendChild(option);
+
+    });
+
+}
+
+
+
+
+
+// Add new product
+productForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let name = document.getElementById("product-name").value;
+    let price = Number(document.getElementById("product-price").value);
+    let quantity = Number(document.getElementById("product-quantity").value);
+
+    // Validate product name
+    if (name.trim() === "") {
+        alert("Please enter a product name.");
+        return;
+    }
+
+    // Validate price and quantity
+if (!Number.isFinite(price) || !Number.isFinite(quantity) || price <= 0 || quantity <= 0) {        alert("Price and quantity must be greater than zero.");
+        return;
+    }
+
+    // Add product
+    products.push({
+        name: name.trim(),
+        price: price,
+        quantity: quantity
+    });
+
+    displaySalesHistory();
+displayBusinessReports();
+displayProducts();
+
+    productForm.reset();
+
+});
+displayProducts();
+// Display initial products and reports
+displayProducts();
+displaySalesHistory();
+displayBusinessReports();
+updateSalesPerformanceChart();
+
+// DISPLAY TOTAL SALES
+totalSalesDisplay.textContent =
+    "Total Sales: TSh " + totalSales.toLocaleString("en-TZ");
+
+// RECORD A SALE
+salesForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let selectedIndex = Number(saleProduct.value);
+
+    let quantitySold = Number(
+        document.getElementById("sale-quantity").value
+    );
+
+    if (saleProduct.value === "" ||
+        !Number.isInteger(quantitySold) ||
+        quantitySold <= 0) {
+
+        alert("Please select a product and enter a valid quantity.");
+        return;
+    }
+
+    let product = products[selectedIndex];
+
+    if (!product || quantitySold > product.quantity) {
+
+        alert("Not enough stock available!");
+        return;
+    }
+
+    let saleAmount = product.price * quantitySold;
+
+    product.quantity -= quantitySold;
+
+    totalSales += saleAmount;
+// SAVE SALE RECORD
+
+let saleRecord = {
+    receiptNumber: "GB-" + Date.now(),
+    productName: product.name,
+    quantity: quantitySold,
+    unitPrice: product.price,
+    total: saleAmount,
+    date: new Date().toISOString()
+};
+salesHistory.push(saleRecord);
+
+localStorage.setItem(
+    "growbridgeSalesHistory",
+    JSON.stringify(salesHistory)
+);
+
+    localStorage.setItem(
+        "growbridgeTotalSales",
+        totalSales
+    );
+
+    displayProducts();
+displaySalesHistory();
+displayBusinessReports();
+    totalSalesDisplay.textContent =
+        "Total Sales: TSh " + totalSales.toLocaleString("en-TZ");
+
+        saleMessage.textContent =
+        "Sale recorded successfully!";
+// DISPLAY SALES RECEIPT
+document.getElementById("receipt-container").style.display = "block";
+
+document.getElementById("receipt-number").textContent =
+    saleRecord.receiptNumber;
+
+document.getElementById("receipt-date").textContent =
+    new Date(saleRecord.date).toLocaleString();
+
+document.getElementById("receipt-product").textContent =
+    saleRecord.productName;
+
+document.getElementById("receipt-quantity").textContent =
+    saleRecord.quantity;
+
+document.getElementById("receipt-price").textContent =
+    "TSh " + saleRecord.unitPrice.toLocaleString("en-TZ");
+
+document.getElementById("receipt-total").textContent =
+    "TSh " + saleRecord.total.toLocaleString("en-TZ");
+    salesForm.reset();
+
+});
+// Delete a product
+function deleteProduct(index) {
+
+    if (!products[index] || !confirm('Delete "' + products[index].name + '" from inventory?')) {
+        return;
+    }
+
+    products.splice(index, 1);
+
+    displayProducts();
+displayBusinessReports();
+}
+// EDIT PRODUCT
+
+function editProduct(index) {
+
+    let product = products[index];
+
+    let newName = prompt("Enter new product name:", product.name);
+
+    if (newName === null || newName.trim() === "") {
+        return;
+    }
+
+    let newPrice = Number(
+        prompt("Enter new product price:", product.price)
+    );
+
+    if (!Number.isFinite(newPrice) || newPrice <= 0) {
+        alert("Please enter a valid price.");
+        return;
+    }
+
+    let newQuantity = Number(
+        prompt("Enter new product quantity:", product.quantity)
+    );
+
+    if (!Number.isInteger(newQuantity) || newQuantity < 0) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
+
+    product.name = newName.trim();
+    product.price = newPrice;
+    product.quantity = newQuantity;
+
+    displayProducts();
+
+    alert("Product updated successfully!");
+
+}
+// GROWBRIDGE ACTIVE SIDEBAR LINK
+
+let navLinks = document.querySelectorAll(".nav-link");
+
+let pageSections = document.querySelectorAll("main section");
+
+window.addEventListener("scroll", function() {
+
+    let currentSection = "";
+
+    pageSections.forEach(function(section) {
+
+        let sectionTop = section.offsetTop;
+
+        if (window.scrollY >= sectionTop - 150) {
+            currentSection = section.getAttribute("id");
+        }
+
+    });
+
+    navLinks.forEach(function(link) {
+
+        link.classList.remove("active");
+
+        if (link.getAttribute("href") === "#" + currentSection) {
+            link.classList.add("active");
+        }
+
+    });
+
+});
+// GROWBRIDGE BACK TO TOP FUNCTION
+
+let backToTop = document.getElementById("back-to-top");
+
+window.addEventListener("scroll", function() {
+
+    if (window.scrollY > 300) {
+        backToTop.style.display = "block";
+    } else {
+        backToTop.style.display = "none";
+    }
+
+});
+
+backToTop.addEventListener("click", function() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+});
+// GROWBRIDGE PRODUCT SEARCH
+
+let productSearch = document.getElementById("product-search");
+
+console.log("GrowBridge search initialized:", productSearch);
+
+if (productSearch) {
+    productSearch.addEventListener("input", function() {
+        console.log("Search input:", productSearch.value);
+        displayProducts();
+    });
+}
+// PRINT CUSTOMER RECEIPT ONLY
+
+function printCustomerReceipt() {
+
+    const receipt = document.getElementById("sales-receipt");
+
+    if (!receipt || !receipt.innerText.trim()) {
+        alert("Please record a sale before printing a receipt.");
+        return;
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+        alert("Please allow pop-ups to print the receipt.");
+        return;
+    }
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>GrowBridge Sales Receipt</title>
+
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background: white;
+                    color: black;
+                    width: 280px;
+                    margin: 20px auto;
+                    padding: 15px;
+                }
+
+                h2, h3, p {
+                    color: black;
+                    text-align: center;
+                }
+
+                hr {
+                    border: 1px dashed black;
+                }
+
+                @media print {
+                    @page {
+                        size: 80mm auto;
+                        margin: 5mm;
+                    }
+                }
+            </style>
+        </head>
+
+        <body>
+            ${receipt.innerHTML}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.onload = function() {
+        printWindow.focus();
+        printWindow.print();
+    };
+}
+// GROWBRIDGE SALES PERFORMANCE CHART
+
+let salesPerformanceChart = null;
+
+function updateSalesPerformanceChart() {
+
+    const canvas = document.getElementById("sales-performance-chart");
+
+    if (!canvas) return;
+
+    if (document.body.classList.contains("page-dashboard") === false) {
+        return;
+    }
+
+    const emptyMessage = document.getElementById("sales-chart-empty");
+
+    if (typeof Chart === "undefined") {
+        if (emptyMessage) {
+            emptyMessage.textContent = "Chart unavailable. Check your internet connection.";
+            emptyMessage.style.display = "block";
+        }
+        return;
+    }
+
+    const dailyRevenue = {};
+
+    salesHistory.forEach(function(sale) {
+
+        const date = new Date(sale.date);
+
+        if (isNaN(date.getTime())) return;
+
+        const dateKey = date.toLocaleDateString("en-CA");
+
+        dailyRevenue[dateKey] =
+            (dailyRevenue[dateKey] || 0) + Number(sale.total || 0);
+    });
+
+    const dates = Object.keys(dailyRevenue).sort();
+
+    if (emptyMessage) {
+        emptyMessage.style.display = dates.length ? "none" : "block";
+        emptyMessage.textContent = "No sales recorded yet. Your sales performance will appear here.";
+    }
+
+    if (salesPerformanceChart) {
+        salesPerformanceChart.destroy();
+    }
+
+    if (dates.length === 0) return;
+
+    const labels = dates.map(function(date) {
+        return new Date(date + "T12:00:00").toLocaleDateString("en-TZ", {
+            day: "2-digit",
+            month: "short"
+        });
+    });
+
+    const values = dates.map(function(date) {
+        return dailyRevenue[date];
+    });
+
+    salesPerformanceChart = new Chart(canvas, {
+
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Daily Revenue",
+                data: values,
+                borderColor: "#16a34a",
+                backgroundColor: "rgba(22, 163, 74, 0.12)",
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return "Revenue: TSh " +
+                                Number(context.raw).toLocaleString("en-TZ");
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        callback: function(value) {
+                            return "TSh " +
+                                Number(value).toLocaleString("en-TZ");
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// INITIALIZE DASHBOARD CHART
+updateSalesPerformanceChart();
+
+
+// ==========================================================
+// DELETE SALES RECORDS (single or all) — with optional stock return
+// ==========================================================
+let saleDialog = document.getElementById("sale-dialog");
+let pendingDelete = null;
+
+function openSaleDialog(mode, index) {
+    pendingDelete = { mode: mode, index: index };
+
+    let title = document.getElementById("sale-dialog-title");
+    let text = document.getElementById("sale-dialog-text");
+
+    if (mode === "all") {
+        title.textContent = "Clear all sales history?";
+        text.textContent = "All " + salesHistory.length +
+            " sale records will be removed. Reports and totals will update. This cannot be undone.";
+    } else {
+        let sale = salesHistory[index];
+        title.textContent = "Delete this sale?";
+        text.textContent = sale.quantity + " × " + sale.productName +
+            " (TSh " + Number(sale.total).toLocaleString("en-TZ") + "). This cannot be undone.";
+    }
+
+    document.getElementById("sale-dialog-restore").checked = false;
+    saleDialog.showModal();
+}
+
+function removeSale(sale, restoreStock) {
+    totalSales = Math.max(0, totalSales - Number(sale.total || 0));
+
+    if (restoreStock) {
+        let product = products.find(function(p) { return p.name === sale.productName; });
+        if (product) product.quantity += Number(sale.quantity || 0);
+    }
+}
+
+if (saleDialog) {
+
+    salesHistoryTable.addEventListener("click", function(event) {
+        let button = event.target.closest("[data-delete-sale]");
+        if (button) openSaleDialog("one", Number(button.dataset.deleteSale));
+    });
+
+    let clearBtn = document.getElementById("clear-sales-history");
+    if (clearBtn) {
+        clearBtn.addEventListener("click", function() {
+            if (salesHistory.length === 0) {
+                alert("There are no sales records to clear.");
+                return;
+            }
+            openSaleDialog("all");
+        });
+    }
+
+    document.getElementById("sale-dialog-cancel").addEventListener("click", function() {
+        saleDialog.close();
+    });
+
+    document.getElementById("sale-dialog-confirm").addEventListener("click", function() {
+        let restore = document.getElementById("sale-dialog-restore").checked;
+
+        if (pendingDelete.mode === "all") {
+            salesHistory.forEach(function(sale) { removeSale(sale, restore); });
+            salesHistory = [];
+            totalSales = 0;
+        } else {
+            let sale = salesHistory[pendingDelete.index];
+            if (sale) {
+                removeSale(sale, restore);
+                salesHistory.splice(pendingDelete.index, 1);
+            }
+        }
+
+        localStorage.setItem("growbridgeSalesHistory", JSON.stringify(salesHistory));
+        localStorage.setItem("growbridgeTotalSales", totalSales);
+
+        displayProducts();
+        displaySalesHistory();
+        displayBusinessReports();
+        updateSalesPerformanceChart();
+        totalSalesDisplay.textContent =
+            "Total Sales: TSh " + totalSales.toLocaleString("en-TZ");
+
+        saleDialog.close();
+    });
+}

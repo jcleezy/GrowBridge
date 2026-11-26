@@ -500,3 +500,56 @@ dialog::backdrop { background: rgba(8, 20, 18, .45); -webkit-backdrop-filter: bl
     box-shadow: var(--shadow);
 }
 .gb-warn button { flex: none; min-height: 34px; padding: 4px 12px; background: var(--warn); color: #fff; }
+
+
+/* ==========================================================
+   v7 — Wave & colour-blob background (behind the glass)
+   ========================================================== */
+:root {
+    --wave1: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%2314b8a6%22 fill-opacity=%220.38%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+    --wave2: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%2338bdf8%22 fill-opacity=%220.3%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+    --wave3: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%234ade80%22 fill-opacity=%220.3%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --wave1: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%232dd4bf%22 fill-opacity=%220.3%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+        --wave2: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%236366f1%22 fill-opacity=%220.34%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+        --wave3: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 200%22 preserveAspectRatio=%22none%22%3E%3Cpath fill=%22%2322c55e%22 fill-opacity=%220.24%22 d=%22M0 100C200 20 400 20 600 100S1000 180 1200 100V200H0Z%22/%3E%3C/svg%3E");
+    }
+}
+
+body::before {
+    background:
+        radial-gradient(46vmax 46vmax at 6% 4%,   rgba(20, 184, 166, .60), transparent 62%),
+        radial-gradient(40vmax 40vmax at 98% 10%, rgba(99, 102, 241, .45), transparent 62%),
+        radial-gradient(44vmax 44vmax at 92% 70%, rgba(56, 189, 248, .40), transparent 62%),
+        radial-gradient(40vmax 40vmax at 0% 80%,  rgba(74, 222, 128, .42), transparent 62%);
+}
+@media (prefers-color-scheme: dark) {
+    body::before {
+        background:
+            radial-gradient(46vmax 46vmax at 6% 4%,   rgba(20, 184, 166, .38), transparent 62%),
+            radial-gradient(40vmax 40vmax at 98% 10%, rgba(99, 102, 241, .40), transparent 62%),
+            radial-gradient(44vmax 44vmax at 92% 70%, rgba(14, 165, 233, .28), transparent 62%),
+            radial-gradient(40vmax 40vmax at 0% 80%,  rgba(34, 197, 94, .26), transparent 62%);
+    }
+}
+
+body::after {
+    content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: 46vh; z-index: -1; pointer-events: none;
+    background-image: var(--wave3), var(--wave2), var(--wave1);
+    background-repeat: repeat-x;
+    background-size: 900px 150px, 1600px 190px, 1200px 230px;
+    background-position: 0 100%, 0 100%, 0 100%;
+}
+
+/* motion only on desktop-class devices (keeps phones smooth and saves battery) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    body::after { animation: waves 40s linear infinite; }
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+}
+@keyframes waves {
+    to { background-position: 900px 100%, -1600px 100%, 1200px 100%; }
+}
